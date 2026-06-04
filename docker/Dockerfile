@@ -6,19 +6,21 @@ ENV HF_HOME=/data/cache/huggingface
 ENV SENTENCE_TRANSFORMERS_HOME=/data/cache/sentence_transformers
 ENV PATH="/app/venv/bin:$PATH"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+COPY requirements.txt /app/requirements.txt
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/entrypoint.sh && \
+    apt-get update && apt-get install -y --no-install-recommends \
     tini ca-certificates curl ffmpeg && rm -rf /var/lib/apt/lists/* && \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     /root/.local/bin/uv venv /app/venv --python 3.11 && \
     /root/.local/bin/uv pip install --python /app/venv torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
-    /root/.local/bin/uv pip install --python /app/venv open-webui && \
+    /root/.local/bin/uv pip install --python /app/venv -r /app/requirements.txt && \
     /root/.local/bin/uv cache clean && \
     rm -rf /var/log && ln -s /tmp/log /var/log && \
     rm -rf /run && ln -s /tmp/run /run && \
+    rm -rf /app/requirements.txt && \
     mkdir -p /data
-
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 8080
 
