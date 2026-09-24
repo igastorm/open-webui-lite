@@ -1,5 +1,5 @@
 # ==========================================
-FROM debian:trixie-slim@sha256:d7e12182ce18b85b93007c1dedf31f2d29e01ccf3182cc4017c709b6259bc132 AS builder
+FROM debian:trixie-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/app/venv/bin:$PATH"
@@ -22,7 +22,7 @@ RUN find /app/venv -name "*.so" -exec strip --strip-unneeded {} + && \
     find /app/venv -name "*.pyc" -delete
 
 # ==========================================
-FROM debian:trixie-slim@sha256:d7e12182ce18b85b93007c1dedf31f2d29e01ccf3182cc4017c709b6259bc132
+FROM debian:trixie-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DATA_DIR=/data
